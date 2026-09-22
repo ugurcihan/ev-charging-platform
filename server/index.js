@@ -24,7 +24,7 @@ app.get('/api/state', (req, res) => {
 });
 
 const server = app.listen(PORT, () => {
-  console.log(`Lodestar listening on http://localhost:${PORT}`);
+  console.log(`Gridspark listening on http://localhost:${PORT}`);
   console.log(`  Charge points connect at ws://localhost:${PORT}/ocpp/<chargePointId>`);
   console.log(`  OCPI roaming base:      http://localhost:${PORT}/ocpi`);
   console.log(`  Roaming registration token (Token A): ${roaming.tokenA}`);
