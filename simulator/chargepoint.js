@@ -10,6 +10,11 @@ const HARDWARE_POOL = [
   { vendor: 'Kempower', model: 'Satellite DC', firmware: '2.9.0' },
   { vendor: 'Alfen', model: 'Eve Double Pro-line', firmware: '4.14.2' },
   { vendor: 'Tritium', model: 'PKM150', firmware: '1.7.6' },
+  // BootNotification vendor/model pairs as used in mobilityhouse/ocpp's own
+  // reference examples (examples/v16/charge_point.py, examples/v201/charge_point.py) —
+  // included as-is since they're the values the library's own docs boot with.
+  { vendor: 'The Mobility House', model: 'Optimus', firmware: '1.0.0' },
+  { vendor: 'anewone', model: 'Wallbox XYZ', firmware: '2.3.0' },
 ];
 
 const CP_ID = process.argv[2] || `CP-${Math.floor(Math.random() * 900 + 100)}`;
