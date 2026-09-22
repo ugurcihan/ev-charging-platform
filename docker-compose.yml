@@ -6,6 +6,7 @@ services:
     environment:
       - PORT=9230
       - TOKEN_A=tokenA-demo-fixed-for-compose
+      - PUBLIC_HOST=platform
     restart: unless-stopped
 
   charger:

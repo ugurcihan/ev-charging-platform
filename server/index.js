@@ -9,7 +9,13 @@ const { createStationNetwork } = require('./ocpp-station');
 const { createRoamingNetwork } = require('./ocpi-roaming');
 
 const PORT = process.env.PORT || 9230;
-const OCPI_BASE = `http://localhost:${PORT}/ocpi`;
+// The hostname OCPI discovery responses (GET /ocpi/versions, /2.2.1/details)
+// advertise as the base for all subsequent calls. Defaults to localhost for
+// local dev, but a roaming partner reaching this service from a different
+// host or container (e.g. another service in the same Docker network) needs
+// the real, resolvable hostname here instead.
+const PUBLIC_HOST = process.env.PUBLIC_HOST || 'localhost';
+const OCPI_BASE = `http://${PUBLIC_HOST}:${PORT}/ocpi`;
 
 const stations = createStationNetwork();
 const roaming = createRoamingNetwork({ basePath: OCPI_BASE });
