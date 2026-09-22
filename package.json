@@ -1,0 +1,17 @@
+{
+  "name": "ev-charging-platform",
+  "version": "1.0.0",
+  "description": "EV charging network backend: an OCPP 1.6-J CSMS (charge point communication) and an OCPI 2.2.1 CPO platform (roaming interop), served from one process with a live operations console.",
+  "main": "server/index.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server/index.js",
+    "simulate:charger": "node simulator/chargepoint.js",
+    "simulate:roaming": "node emsp/partner.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1",
+    "ws": "^8.21.3"
+  }
+}

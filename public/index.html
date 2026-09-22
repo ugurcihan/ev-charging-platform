@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EV Charging Platform — Operations Console</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><span class="dot" id="liveDot"></span> Charge Network Operations</div>
+    <p class="subtitle">EV charging backend — station communication (OCPP) &amp; roaming interop (OCPI)</p>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="ocpp" role="tab" aria-selected="true">Charging Network</button>
+      <button class="tab" data-tab="ocpi" role="tab" aria-selected="false">Roaming Partners</button>
+    </nav>
+  </header>
+
+  <main class="wrap">
+
+    <section class="panel" id="panel-ocpp">
+      <div class="panel-head">
+        <div>
+          <h2>Charge Points</h2>
+          <p class="panel-note">OCPP 1.6-J — WebSocket session lifecycle: Boot → Authorize → Start → MeterValues → Stop</p>
+        </div>
+      </div>
+      <div class="grid" id="cpGrid"><p class="empty">No charge points connected yet. Run <code>npm run simulate:charger</code>.</p></div>
+
+      <h2>Transactions</h2>
+      <div class="table-wrap">
+        <table id="txTable">
+          <thead><tr><th>ID</th><th>Charge Point</th><th>Status</th><th>Energy</th><th>Started</th></tr></thead>
+          <tbody><tr><td colspan="5" class="empty">No transactions yet.</td></tr></tbody>
+        </table>
+      </div>
+
+      <h2>Protocol Log</h2>
+      <div class="log" id="ocppLog"><p class="empty">Waiting for OCPP messages…</p></div>
+    </section>
+
+    <section class="panel" id="panel-ocpi" hidden>
+      <div class="panel-head">
+        <div>
+          <h2>Roaming Partners</h2>
+          <p class="panel-note">OCPI 2.2.1 — third-party eMSP apps register via the Token A/B/C handshake, then pull Locations &amp; CDRs</p>
+        </div>
+      </div>
+      <div class="grid" id="partnerGrid"><p class="empty">No eMSP has registered yet. Run <code>npm run simulate:roaming</code>.</p></div>
+
+      <h2>Published Locations</h2>
+      <div class="grid" id="locGrid"></div>
+
+      <h2>CDRs — settlement records</h2>
+      <div class="table-wrap">
+        <table id="cdrTable">
+          <thead><tr><th>ID</th><th>Location</th><th>Energy</th><th>Cost (incl. VAT)</th><th>Settled</th></tr></thead>
+          <tbody><tr><td colspan="5" class="empty">No CDRs yet — run a demo session.</td></tr></tbody>
+        </table>
+      </div>
+
+      <h2>OCPI Traffic Log</h2>
+      <div class="log" id="ocpiLog"><p class="empty">Waiting for OCPI calls…</p></div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

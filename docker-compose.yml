@@ -1,0 +1,21 @@
+services:
+  platform:
+    build: .
+    ports:
+      - "9230:9230"
+    environment:
+      - PORT=9230
+      - TOKEN_A=tokenA-demo-fixed-for-compose
+    restart: unless-stopped
+
+  charger:
+    build: .
+    depends_on:
+      - platform
+    entrypoint: ["sh", "-c", "sleep 2 && node simulator/chargepoint.js CP-DOCKER ws://platform:9230"]
+
+  roaming-partner:
+    build: .
+    depends_on:
+      - platform
+    entrypoint: ["sh", "-c", "sleep 3 && node emsp/partner.js http://platform:9230 tokenA-demo-fixed-for-compose"]
