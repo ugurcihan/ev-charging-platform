@@ -1,4 +1,4 @@
-# EV Charging Platform
+# Lodestar
 
 A from-scratch EV charging network backend covering both protocols a real
 charging network runs on: **OCPP 1.6-J** for talking to physical charge

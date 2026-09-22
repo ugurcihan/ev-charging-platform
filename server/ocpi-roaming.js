@@ -9,7 +9,7 @@ function newToken(prefix) {
   return `${prefix}-${crypto.randomBytes(12).toString('hex')}`;
 }
 
-const CPO_PARTY = { role: 'CPO', business_details: { name: 'Charge Network Operations' }, party_id: 'CNO', country_code: 'TR' };
+const CPO_PARTY = { role: 'CPO', business_details: { name: 'Lodestar' }, party_id: 'LOD', country_code: 'TR' };
 
 function createRoamingNetwork({ basePath }) {
   const tokenA = process.env.TOKEN_A || newToken('tokenA');
@@ -20,7 +20,7 @@ function createRoamingNetwork({ basePath }) {
       address: '142 Riverside Ave', city: 'Istanbul', country: 'TUR',
       coordinates: { latitude: '41.0369', longitude: '28.9850' },
       evses: [{
-        uid: 'EVSE-DT-1', evse_id: 'TR*CNO*E000001', status: 'AVAILABLE',
+        uid: 'EVSE-DT-1', evse_id: 'TR*LOD*E000001', status: 'AVAILABLE',
         connectors: [{ id: '1', standard: 'IEC_62196_T2_COMBO', format: 'CABLE', power_type: 'DC', max_voltage: 500, max_amperage: 300 }],
       }],
       last_updated: new Date().toISOString(),
@@ -30,7 +30,7 @@ function createRoamingNetwork({ basePath }) {
       address: '58 Market Square', city: 'Istanbul', country: 'TUR',
       coordinates: { latitude: '40.9906', longitude: '29.0284' },
       evses: [{
-        uid: 'EVSE-RP-1', evse_id: 'TR*CNO*E000002', status: 'CHARGING',
+        uid: 'EVSE-RP-1', evse_id: 'TR*LOD*E000002', status: 'CHARGING',
         connectors: [{ id: '1', standard: 'IEC_62196_T2', format: 'SOCKET', power_type: 'AC_3_PHASE', max_voltage: 400, max_amperage: 32 }],
       }],
       last_updated: new Date().toISOString(),
