@@ -1,13 +1,28 @@
 // Simulates a real charge point's OCPP 1.6-J session lifecycle: connect ->
 // BootNotification -> StatusNotification -> Authorize -> StartTransaction
 // -> periodic MeterValues -> StopTransaction.
-// Usage: node simulator/chargepoint.js [chargePointId] [platformUrl]
+// Usage: node simulator/chargepoint.js [chargePointId] [platformUrl] [--keep-charging]
 
 const WebSocket = require('ws');
 
+const HARDWARE_POOL = [
+  { vendor: 'ABB', model: 'Terra 184 DC Fast Charger', firmware: '3.2.1' },
+  { vendor: 'Kempower', model: 'Satellite DC', firmware: '2.9.0' },
+  { vendor: 'Alfen', model: 'Eve Double Pro-line', firmware: '4.14.2' },
+  { vendor: 'Tritium', model: 'PKM150', firmware: '1.7.6' },
+];
+
 const CP_ID = process.argv[2] || `CP-${Math.floor(Math.random() * 900 + 100)}`;
 const BASE_URL = process.argv[3] || `ws://localhost:${process.env.PORT || 9230}`;
+const KEEP_CHARGING = process.argv.includes('--keep-charging');
 const url = `${BASE_URL}/ocpp/${CP_ID}`;
+
+function hashPick(pool, key) {
+  let h = 0;
+  for (const c of key) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return pool[h % pool.length];
+}
+const HARDWARE = hashPick(HARDWARE_POOL, CP_ID);
 
 let seq = 1;
 const pending = new Map();
@@ -26,9 +41,9 @@ function connect() {
   ws.on('open', () => {
     console.log(`[${CP_ID}] connected to ${url}`);
     call(ws, 'BootNotification', {
-      chargePointVendor: 'ABB',
-      chargePointModel: 'Terra 184 DC Fast Charger',
-      firmwareVersion: '3.2.1',
+      chargePointVendor: HARDWARE.vendor,
+      chargePointModel: HARDWARE.model,
+      firmwareVersion: HARDWARE.firmware,
     });
   });
 
@@ -46,6 +61,13 @@ function connect() {
     }
     if (action === 'Authorize') startTransaction(ws);
     if (action === 'StartTransaction') streamMeterValues(ws, payloadOrAction.transactionId);
+    if (action === 'StopTransaction') {
+      // A real charger stays connected (idle, sending heartbeats) after a
+      // session ends; this CLI is a one-shot scenario-seeding tool, so it
+      // exits once the session it was asked to run has actually settled.
+      ws.close();
+      process.exit(0);
+    }
   });
 
   ws.on('close', () => console.log(`[${CP_ID}] connection closed`));
@@ -85,11 +107,11 @@ function streamMeterValues(ws, transactionId) {
         sampledValue: [{ value: String(meterWh), unit: 'Wh', measurand: 'Energy.Active.Import.Register' }],
       }],
     });
-    if (ticks >= 4) {
+    if (ticks >= 4 && !KEEP_CHARGING) {
       clearInterval(interval);
       setTimeout(() => stopTransaction(ws, transactionId), 1000);
     }
-  }, 1500);
+  }, KEEP_CHARGING ? 6000 : 1500);
 }
 
 function stopTransaction(ws, transactionId) {
